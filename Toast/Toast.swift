@@ -423,6 +423,8 @@ public extension UIView {
         
         let wrapperView = UIView()
         wrapperView.backgroundColor = style.backgroundColor
+        wrapperView.layer.borderColor = style.borderColor.cgColor
+        wrapperView.layer.borderWidth = style.borderWidth
         wrapperView.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin, .flexibleTopMargin, .flexibleBottomMargin]
         wrapperView.layer.cornerRadius = style.cornerRadius
         
@@ -601,7 +603,17 @@ public struct ToastStyle {
      The corner radius. Default is 10.0.
     */
     public var cornerRadius: CGFloat = 10.0;
-    
+
+    /**
+     The border color. Default is `.clear`.
+    */
+    public var borderColor: UIColor = .clear
+
+    /**
+     The border width. Default is `1`.
+    */
+    public var borderWidth: CGFloat = 0
+
     /**
      The title font. Default is `.boldSystemFont(16.0)`.
     */
