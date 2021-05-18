@@ -610,7 +610,7 @@ public struct ToastStyle {
     public var borderColor: UIColor = .clear
 
     /**
-     The border width. Default is `1`.
+     The border width. Default is `0`.
     */
     public var borderWidth: CGFloat = 0
 
