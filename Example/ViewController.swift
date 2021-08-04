@@ -60,18 +60,6 @@ class ViewController: UITableViewController {
     }
     
     @objc
-    private func handleOffsetToggled() {
-        if ToastManager.shared.bottomOffset != 0 && ToastManager.shared.topOffset != 0 {
-            ToastManager.shared.bottomOffset = 0
-            ToastManager.shared.topOffset = 0
-            return
-        }
-
-        ToastManager.shared.bottomOffset = 100
-        ToastManager.shared.topOffset = 100
-    }
-    
-    @objc
     private func handleQueueToggled() {
         ToastManager.shared.isQueueEnabled = !ToastManager.shared.isQueueEnabled
     }
@@ -87,9 +75,9 @@ extension ViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 3
+            return 2
         } else {
-            return 11
+            return 13
         }
     }
     
@@ -126,18 +114,6 @@ extension ViewController {
                     cell?.textLabel?.font = UIFont.systemFont(ofSize: 16.0)
                 }
                 cell?.textLabel?.text = "Tap to dismiss"
-            } else if indexPath.row == 1 {
-                if cell == nil {
-                    cell = UITableViewCell(style: .default, reuseIdentifier: ReuseIdentifiers.switchCellId)
-                    let offsetSwitch = UISwitch()
-                    offsetSwitch.onTintColor = .darkBlue
-                    offsetSwitch.isOn = ToastManager.shared.bottomOffset != 0 && ToastManager.shared.topOffset != 0
-                    offsetSwitch.addTarget(self, action: #selector(handleOffsetToggled), for: .valueChanged)
-                    cell?.accessoryView = offsetSwitch
-                    cell?.selectionStyle = .none
-                    cell?.textLabel?.font = UIFont.systemFont(ofSize: 16.0)
-                }
-                cell?.textLabel?.text = "Top/Bottom offset 100"
             } else {
                 if cell == nil {
                     cell = UITableViewCell(style: .default, reuseIdentifier: ReuseIdentifiers.switchCellId)
@@ -163,16 +139,18 @@ extension ViewController {
             
             switch indexPath.row {
             case 0: cell.textLabel?.text = "Make toast"
-            case 1: cell.textLabel?.text = "Make toast on top for 3 seconds"
-            case 2: cell.textLabel?.text = "Make toast with a title"
-            case 3: cell.textLabel?.text = "Make toast with an image"
-            case 4: cell.textLabel?.text = "Make toast with a title, image, and completion closure"
-            case 5: cell.textLabel?.text = "Make toast with a custom style"
-            case 6: cell.textLabel?.text = "Show a custom view as toast"
-            case 7: cell.textLabel?.text = "Show an image as toast at point\n(110, 110)"
-            case 8: cell.textLabel?.text = showingActivity ? "Hide toast activity" : "Show toast activity"
-            case 9: cell.textLabel?.text = "Hide toast"
-            case 10: cell.textLabel?.text = "Hide all toasts"
+            case 1: cell.textLabel?.text = "Make toast on top with 100 offset"
+            case 2: cell.textLabel?.text = "Make toast on bottom with 100 offset"
+            case 3: cell.textLabel?.text = "Make toast on top for 3 seconds"
+            case 4: cell.textLabel?.text = "Make toast with a title"
+            case 5: cell.textLabel?.text = "Make toast with an image"
+            case 6: cell.textLabel?.text = "Make toast with a title, image, and completion closure"
+            case 7: cell.textLabel?.text = "Make toast with a custom style"
+            case 8: cell.textLabel?.text = "Show a custom view as toast"
+            case 9: cell.textLabel?.text = "Show an image as toast at point\n(110, 110)"
+            case 10: cell.textLabel?.text = showingActivity ? "Hide toast activity" : "Show toast activity"
+            case 11: cell.textLabel?.text = "Hide toast"
+            case 12: cell.textLabel?.text = "Hide all toasts"
             default: cell.textLabel?.text = nil
             }
             
@@ -191,24 +169,30 @@ extension ViewController {
             // Make Toast
              self.navigationController?.view.makeToast("This is a piece of toast")
         case 1:
-            // Make toast with a duration and position
-            self.navigationController?.view.makeToast("This is a piece of toast on top for 3 seconds", duration: 3.0, position: .top)
+            // Make Toast on top with 100 offset
+             self.navigationController?.view.makeToast("This is a piece of toast on top with 100 offset", position: .top(100))
         case 2:
-            // Make toast with a title
-            self.navigationController?.view.makeToast("This is a piece of toast with a title", duration: 2.0, position: .top, title: "Toast Title", image: nil)
+            // Make Toast on bottom with 100 offset
+            self.navigationController?.view.makeToast("This is a piece of toast on bottom with 100 offset", position: .bottom(100))
         case 3:
+            // Make toast with a duration and position
+            self.navigationController?.view.makeToast("This is a piece of toast on top for 3 seconds", duration: 3.0, position: .top())
+        case 4:
+            // Make toast with a title
+            self.navigationController?.view.makeToast("This is a piece of toast with a title", duration: 2.0, position: .top(), title: "Toast Title", image: nil)
+        case 5:
             // Make toast with an image
             self.navigationController?.view.makeToast("This is a piece of toast with an image", duration: 2.0, position: .center, title: nil, image: UIImage(named: "toast.png"))
-        case 4:
+        case 6:
             // Make toast with an image, title, and completion closure
-            self.navigationController?.view.makeToast("This is a piece of toast with a title, image, and completion closure", duration: 2.0, position: .bottom, title: "Toast Title", image: UIImage(named: "toast.png")) { didTap in
+            self.navigationController?.view.makeToast("This is a piece of toast with a title, image, and completion closure", duration: 2.0, position: .bottom(), title: "Toast Title", image: UIImage(named: "toast.png")) { didTap in
                 if didTap {
                     print("completion from tap")
                 } else {
                     print("completion without tap")
                 }
             }
-        case 5:
+        case 7:
             // Make toast with a custom style
             var style = ToastStyle()
             style.messageFont = UIFont(name: "Zapfino", size: 14.0)!
@@ -217,18 +201,18 @@ extension ViewController {
             style.backgroundColor = UIColor.yellow
             style.borderWidth = 1
             style.borderColor = UIColor.red
-            self.navigationController?.view.makeToast("This is a piece of toast with a custom style", duration: 3.0, position: .bottom, style: style)
-        case 6:
+            self.navigationController?.view.makeToast("This is a piece of toast with a custom style", duration: 3.0, position: .bottom(), style: style)
+        case 8:
             // Show a custom view as toast
             let customView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: 80.0, height: 400.0))
             customView.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin, .flexibleTopMargin, .flexibleBottomMargin]
             customView.backgroundColor = .lightBlue
             self.navigationController?.view.showToast(customView, duration: 2.0, position: .center)
-        case 7:
+        case 9:
             // Show an image view as toast, on center at point (110,110)
             let toastView = UIImageView(image: UIImage(named: "toast.png"))
             self.navigationController?.view.showToast(toastView, duration: 2.0, point: CGPoint(x: 110.0, y: 110.0))
-        case 8:
+        case 10:
             // Make toast activity
             if !showingActivity {
                 self.navigationController?.view.makeToastActivity(.center)
@@ -239,10 +223,10 @@ extension ViewController {
             showingActivity.toggle()
             
             tableView.reloadData()
-        case 9:
+        case 11:
             // Hide toast
             self.navigationController?.view.hideToast()
-        case 10:
+        case 12:
             // Hide all toasts
             self.navigationController?.view.hideAllToasts()
         default:

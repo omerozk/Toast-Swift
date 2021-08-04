@@ -753,39 +753,27 @@ public class ToastManager {
      Default is `ToastPosition.Bottom`.
      
      */
-    public var position: ToastPosition = .bottom
-    
-    /**
-     Sets the top offset when making a toast on top.
-     `makeToast` or `showToast` with position set to `ToastPosition.top`.
-    */
-    public var topOffset: CGFloat = 0
-
-    /**
-     Sets the bottom offset when making a toast on bottom.
-     `makeToast` or `showToast` with position set to `ToastPosition.bottom`.
-     */
-    public var bottomOffset: CGFloat = 0
+    public var position: ToastPosition = .bottom()
 }
 
 // MARK: - ToastPosition
 
 public enum ToastPosition {
-    case top
+    case top(_ offset: CGFloat = 0)
     case center
-    case bottom
+    case bottom(_ offset: CGFloat = 0)
     
     fileprivate func centerPoint(forToast toast: UIView, inSuperview superview: UIView) -> CGPoint {
         let topPadding: CGFloat = ToastManager.shared.style.verticalPadding + superview.csSafeAreaInsets.top
         let bottomPadding: CGFloat = ToastManager.shared.style.verticalPadding + superview.csSafeAreaInsets.bottom
         
         switch self {
-        case .top:
-            return CGPoint(x: superview.bounds.size.width / 2.0, y: (toast.frame.size.height / 2.0) + topPadding + ToastManager.shared.topOffset)
+        case .top(let offset):
+            return CGPoint(x: superview.bounds.size.width / 2.0, y: (toast.frame.size.height / 2.0) + topPadding + offset)
         case .center:
             return CGPoint(x: superview.bounds.size.width / 2.0, y: superview.bounds.size.height / 2.0)
-        case .bottom:
-            return CGPoint(x: superview.bounds.size.width / 2.0, y: (superview.bounds.size.height - (toast.frame.size.height / 2.0)) - bottomPadding - ToastManager.shared.bottomOffset)
+        case .bottom(let offset):
+            return CGPoint(x: superview.bounds.size.width / 2.0, y: (superview.bounds.size.height - (toast.frame.size.height / 2.0)) - bottomPadding - offset)
         }
     }
 }
